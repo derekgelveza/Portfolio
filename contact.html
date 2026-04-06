@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <nav class="nav">
+                <ul>
+                    <li class="link"><a href="index.html">Home</a></li>
+                    <li class="link"><a href="projects.html">Projects</a></li>
+                    <li class="link"><a href="contact.html">Contact</a></li>
+                </ul>
+                <div id="mode-icon">
+                    <button>
+                        <img src="icons/night-mode.png" alt="Toggle light/dark mode">
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="contact-main">
+            <section class="contact-section">
+                <h1>Contact me!</h1>
+
+                <form class="contact-form" id="contact-form">
+                    <div class="input-row">
+                        <input type="text" name="name" placeholder="Name" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+
+                    <textarea name="message" placeholder="Drop a note with any website feedback or career opportunities, or just say hi. Where are you from? 😊" required></textarea>
+
+                    <button type="submit" class="send-btn" id="submit-btn">
+                        Send Message
+                        <span class="arrow">✈</span>
+                    </button>
+
+                    <p id="form-status" class="form-status" aria-live="polite"></p>
+
+                    <p class="privacy-text">
+                        By submitting this form, I agree to the <a href="#">privacy policy</a>.
+                    </p>
+                </form>
+            </section>
+    </main>
+
+
+    <footer>
+        <div class="footer-container">
+            <span>&copy; 2026 derekgelveza.com</span>
+            <div class="footer-icons">
+                <a href="https://github.com/derekgelveza" target="_blank">
+                    <img src="icons/GitHub_Invertocat_White_Clearspace.png" alt="GitHub" class="footer-icon-img">
+                </a>
+                <a href="https://www.linkedin.com/in/derekgelveza/" target="_blank">
+                    <img src="icons/InBug-White.png" alt="LinkedIn" class="footer-icon-img">
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="home.js"></script>
+    <script>
+        const form = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const status = document.getElementById('form-status');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            status.textContent = '';
+            status.className = 'form-status';
+
+            const data = new FormData(form);
+
+            try {
+                const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (res.ok) {
+                    status.textContent = "Message sent! I'll get back to you soon.";
+                    status.classList.add('form-status--success');
+                    form.reset();
+                } else {
+                    throw new Error();
+                }
+            } catch {
+                status.textContent = 'Something went wrong. Please try again.';
+                status.classList.add('form-status--error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Send Message <span class="arrow">✈</span>';
+            }
+        });
+    </script>
+</body>
+</html>
